@@ -9,6 +9,7 @@
 # Authors: Jangwon Yie(kleinaberoho10@gmail.com)
 
 """Functions related to the Schultz index of a graph."""
+from itertools import combinations
 import networkx as nx
 from networkx.utils import not_implemented_for
 from .shortest_paths import shortest_path_length as spl
@@ -123,10 +124,9 @@ def __list__dist_and_degree(g):
     dist_pairs = dict(spl(g))
 
     nodes = list(g.nodes)
-    dist_degrees_tuple = list()
-    for i in range(len(nodes)):
-        for j in range(i + 1, len(nodes)):
-            d_ij = dist_pairs[nodes[i]][nodes[j]]
-            dist_degrees_tuple.append((d_ij, g.degree[nodes[i]], g.degree[nodes[j]]))
+    dist_degrees_list = []
+    for i, j in combinations(nodes, 2):
+        d_ij = dist_pairs[nodes[i]][nodes[j]]
+        dist_degrees_list.append((d_ij, g.degree[nodes[i]], g.degree[nodes[j]]))
 
-    return dist_degrees_tuple
+    return dist_degrees_list
