@@ -10,7 +10,7 @@ Communicability.
 #    All rights reserved.
 #    BSD license.
 import networkx as nx
-from networkx.utils import *
+from networkx.utils import not_implemented_for
 __author__ = "\n".join(['Aric Hagberg (hagberg@lanl.gov)',
                         'Franck Kalala (franckkalala@yahoo.fr'])
 __all__ = ['communicability',
@@ -79,7 +79,7 @@ def communicability(G):
     import numpy
     import scipy.linalg
     nodelist = list(G)  # ordering of nodes in matrix
-    A = nx.to_numpy_matrix(G, nodelist)
+    A = nx.to_numpy_array(G, nodelist)
     # convert to 0-1 matrix
     A[A != 0.0] = 1
     w, vec = numpy.linalg.eigh(A)
@@ -94,7 +94,7 @@ def communicability(G):
             p = mapping[u]
             q = mapping[v]
             for j in range(len(nodelist)):
-                s += vec[:, j][p, 0] * vec[:, j][q, 0] * expw[j]
+                s += vec[:, j][p] * vec[:, j][q] * expw[j]
             c[u][v] = float(s)
     return c
 
@@ -156,11 +156,11 @@ def communicability_exp(G):
     """
     import scipy.linalg
     nodelist = list(G)  # ordering of nodes in matrix
-    A = nx.to_numpy_matrix(G, nodelist)
+    A = nx.to_numpy_array(G, nodelist)
     # convert to 0-1 matrix
     A[A != 0.0] = 1
     # communicability matrix
-    expA = scipy.linalg.expm(A.A)
+    expA = scipy.linalg.expm(A)
     mapping = dict(zip(nodelist, range(len(nodelist))))
     c = {}
     for u in G:
@@ -168,17 +168,3 @@ def communicability_exp(G):
         for v in G:
             c[u][v] = float(expA[mapping[u], mapping[v]])
     return c
-
-# fixture for nose tests
-
-
-def setup_module(module):
-    from nose import SkipTest
-    try:
-        import numpy
-    except:
-        raise SkipTest("NumPy not available")
-    try:
-        import scipy
-    except:
-        raise SkipTest("SciPy not available")

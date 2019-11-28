@@ -30,7 +30,6 @@ __author__ = """Aric Hagberg (hagberg@lanl.gov)\nDan Schult (dschult@colgate.edu
 
 __all__ = ['read_gpickle', 'write_gpickle']
 
-import networkx as nx
 from networkx.utils import open_file
 
 try:
@@ -99,10 +98,3 @@ def read_gpickle(path):
     .. [1] https://docs.python.org/2/library/pickle.html
     """
     return pickle.load(path)
-
-# fixture for nose tests
-
-
-def teardown_module(module):
-    import os
-    os.unlink('test.gpickle')

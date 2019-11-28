@@ -40,10 +40,6 @@ import networkx as nx
 from networkx.generators.classic import empty_graph, cycle_graph, path_graph, complete_graph
 from networkx.exception import NetworkXError
 
-#------------------------------------------------------------------------------
-#   Tools for creating small graphs
-#------------------------------------------------------------------------------
-
 
 def make_small_undirected_graph(graph_description, create_using=None):
     """
@@ -87,6 +83,10 @@ def make_small_graph(graph_description, create_using=None):
 
     Use the create_using argument to choose the graph class/type.
     """
+
+    if graph_description[0] not in ("adjacencylist", "edgelist"):
+        raise NetworkXError("ltype must be either adjacencylist or edgelist")
+
     ltype = graph_description[0]
     name = graph_description[1]
     n = graph_description[2]
@@ -172,9 +172,9 @@ def LCF_graph(n, shift_list, repeats, create_using=None):
     return G
 
 
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 #   Various small and named graphs
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 
 def bull_graph(create_using=None):
     """Returns the Bull graph. """

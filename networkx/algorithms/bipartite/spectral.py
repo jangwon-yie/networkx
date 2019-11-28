@@ -18,7 +18,7 @@ def spectral_bipartivity(G, nodes=None, weight='weight'):
 
     Parameters
     ----------
-    G : NetworkX graph 
+    G : NetworkX graph
 
     nodes : list or container  optional(default is all nodes)
       Nodes to return value of spectral bipartivity contribution.
@@ -43,7 +43,7 @@ def spectral_bipartivity(G, nodes=None, weight='weight'):
     Notes
     -----
     This implementation uses Numpy (dense) matrices which are not efficient
-    for storing large sparse graphs.  
+    for storing large sparse graphs.
 
     See Also
     --------
@@ -75,16 +75,3 @@ def spectral_bipartivity(G, nodes=None, weight='weight'):
             i = index[n]
             sb[n] = coshA[i, i] / expA[i, i]
         return sb
-
-
-def setup_module(module):
-    """Fixture for nose tests."""
-    from nose import SkipTest
-    try:
-        import numpy
-    except:
-        raise SkipTest("NumPy not available")
-    try:
-        import scipy
-    except:
-        raise SkipTest("SciPy not available")

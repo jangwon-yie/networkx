@@ -367,13 +367,3 @@ def _transition_matrix(G, nodelist=None, weight='weight',
         raise nx.NetworkXError("walk_type must be random, lazy, or pagerank")
 
     return P
-
-# fixture for nose tests
-
-
-def setup_module(module):
-    from nose import SkipTest
-    try:
-        import numpy
-    except:
-        raise SkipTest("NumPy not available")

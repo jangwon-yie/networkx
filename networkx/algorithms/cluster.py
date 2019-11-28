@@ -12,7 +12,6 @@ from itertools import chain
 from itertools import combinations
 from collections import Counter
 
-import networkx as nx
 from networkx.utils import not_implemented_for
 
 __author__ = """\n""".join(['Aric Hagberg <aric.hagberg@gmail.com>',
@@ -152,7 +151,7 @@ def _directed_triangles_and_degree_iter(G, nodes=None):
 
 
 @not_implemented_for('multigraph')
-def _directed_weighted_triangles_and_degree_iter(G, nodes=None, weight = 'weight'):
+def _directed_weighted_triangles_and_degree_iter(G, nodes=None, weight='weight'):
     """ Return an iterator of
     (node, total_degree, reciprocal_degree, directed_weighted_triangles).
 

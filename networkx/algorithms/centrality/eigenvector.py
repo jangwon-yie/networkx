@@ -236,12 +236,3 @@ def eigenvector_centrality_numpy(G, weight=None, max_iter=50, tol=0):
     largest = eigenvector.flatten().real
     norm = sp.sign(largest.sum()) * sp.linalg.norm(largest)
     return dict(zip(G, largest / norm))
-
-
-# fixture for nose tests
-def setup_module(module):
-    from nose import SkipTest
-    try:
-        import scipy
-    except:
-        raise SkipTest("SciPy not available")

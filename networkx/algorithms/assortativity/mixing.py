@@ -1,8 +1,7 @@
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 """
 Mixing matrices for node attributes and degree.
 """
-import networkx as nx
 from networkx.utils import dict_to_numpy_array
 from networkx.algorithms.assortativity.pairs import node_degree_xy, \
     node_attribute_xy
@@ -235,16 +234,3 @@ def mixing_dict(xy, normalized=False):
             for j in jdict:
                 jdict[j] /= psum
     return d
-
-
-# fixture for nose tests
-def setup_module(module):
-    from nose import SkipTest
-    try:
-        import numpy
-    except:
-        raise SkipTest("NumPy not available")
-    try:
-        import scipy
-    except:
-        raise SkipTest("SciPy not available")

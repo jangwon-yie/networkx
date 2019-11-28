@@ -32,6 +32,7 @@ except ImportError:
         raise ImportError("This example needs Graphviz and either "
                           "PyGraphviz or pydot")
 
+
 def lanl_graph():
     """ Return the lanl internet view graph from lanl.edges
     """
@@ -51,7 +52,8 @@ def lanl_graph():
         time[int(head)] = float(rtt)
 
     # get largest component and assign ping times to G0time dictionary
-    G0 = sorted(nx.connected_component_subgraphs(G), key=len, reverse=True)[0]
+    Gcc = sorted(nx.connected_components(G), key=len, reverse=True)[0]
+    G0 = G.subgraph(Gcc)
     G0.rtt = {}
     for n in G0:
         G0.rtt[n] = time[n]

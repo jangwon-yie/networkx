@@ -92,8 +92,7 @@ EdgeDataView
 
     The argument `nbunch` restricts edges to those incident to nodes in nbunch.
 """
-from collections.abc import Mapping, Set, Iterable
-import networkx as nx
+from collections.abc import Mapping, Set
 
 __all__ = ['NodeView', 'NodeDataView',
            'EdgeView', 'OutEdgeView', 'InEdgeView',

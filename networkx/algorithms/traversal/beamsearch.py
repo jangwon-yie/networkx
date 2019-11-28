@@ -8,7 +8,6 @@
 # information.
 """Basic algorithms for breadth-first searching the nodes of a graph."""
 
-import networkx as nx
 from .breadth_first_search import generic_bfs_edges
 
 __all__ = ['bfs_beam_edges']
@@ -93,6 +92,4 @@ def bfs_beam_edges(G, source, value, width=None):
         # `bfs_edges(G, source)` but with a sorted enqueue step.
         return iter(sorted(G.neighbors(v), key=value, reverse=True)[:width])
 
-    # TODO In Python 3.3+, this should be `yield from ...`
-    for e in generic_bfs_edges(G, source, successors):
-        yield e
+    yield from generic_bfs_edges(G, source, successors)

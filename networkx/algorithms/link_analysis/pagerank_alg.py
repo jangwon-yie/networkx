@@ -468,16 +468,3 @@ def pagerank_scipy(G, alpha=0.85, personalization=None,
         if err < N * tol:
             return dict(zip(nodelist, map(float, x)))
     raise nx.PowerIterationFailedConvergence(max_iter)
-
-
-# fixture for nose tests
-def setup_module(module):
-    from nose import SkipTest
-    try:
-        import numpy
-    except:
-        raise SkipTest("NumPy not available")
-    try:
-        import scipy
-    except:
-        raise SkipTest("SciPy not available")

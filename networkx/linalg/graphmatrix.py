@@ -164,13 +164,3 @@ def adjacency_matrix(G, nodelist=None, weight='weight'):
 
 
 adj_matrix = adjacency_matrix
-
-# fixture for nose tests
-
-
-def setup_module(module):
-    from nose import SkipTest
-    try:
-        import scipy
-    except:
-        raise SkipTest("SciPy not available")

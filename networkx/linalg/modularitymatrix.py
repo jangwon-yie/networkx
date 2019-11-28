@@ -157,13 +157,3 @@ def directed_modularity_matrix(G, nodelist=None, weight=None):
     # Expected adjacency matrix
     X = k_out * k_in / m
     return A - X
-
-
-# fixture for nose tests
-def setup_module(module):
-    from nose import SkipTest
-    try:
-        import numpy
-        import scipy
-    except:
-        raise SkipTest("NumPy not available")

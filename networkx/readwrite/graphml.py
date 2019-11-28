@@ -46,15 +46,7 @@ for examples.
 import warnings
 from collections import defaultdict
 
-try:
-    from xml.etree.cElementTree import Element, ElementTree
-    from xml.etree.cElementTree import tostring, fromstring
-except ImportError:
-    try:
-        from xml.etree.ElementTree import Element, ElementTree
-        from xml.etree.ElementTree import tostring, fromstring
-    except ImportError:
-        pass
+from xml.etree.ElementTree import Element, ElementTree, tostring, fromstring
 
 try:
     import lxml.etree as lxmletree
@@ -62,11 +54,18 @@ except ImportError:
     lxmletree = None
 
 import networkx as nx
-from networkx.utils import open_file, make_str
+from networkx.utils import open_file
 
-__all__ = ['write_graphml', 'read_graphml', 'generate_graphml',
-           'write_graphml_xml', 'write_graphml_lxml',
-           'parse_graphml', 'GraphMLWriter', 'GraphMLReader']
+__all__ = [
+    "write_graphml",
+    "read_graphml",
+    "generate_graphml",
+    "write_graphml_xml",
+    "write_graphml_lxml",
+    "parse_graphml",
+    "GraphMLWriter",
+    "GraphMLReader",
+]
 
 
 @open_file(1, mode='wb')
@@ -349,7 +348,7 @@ class GraphML(object):
                  (np.uint16, "int"), (np.uint32, "int"),
                  (np.uint64, "int"), (np.int_, "int"),
                  (np.intc, "int"), (np.intp, "int"),
-                ] + types
+                 ] + types
 
     xml_type = dict(types)
     python_type = dict(reversed(a) for a in types)
@@ -370,11 +369,6 @@ class GraphML(object):
 class GraphMLWriter(GraphML):
     def __init__(self, graph=None, encoding="utf-8", prettyprint=True,
                  infer_numeric_types=False):
-        try:
-            import xml.etree.ElementTree
-        except ImportError:
-            msg = 'GraphML writer requires xml.elementtree.ElementTree'
-            raise ImportError(msg)
         self.myElement = Element
 
         self.infer_numeric_types = infer_numeric_types
@@ -449,7 +443,7 @@ class GraphMLWriter(GraphML):
             # add subelement for data default value if present
             if default is not None:
                 default_element = self.myElement("default")
-                default_element.text = make_str(default)
+                default_element.text = str(default)
                 key_element.append(default_element)
             self.xml.insert(0, key_element)
         return new_id
@@ -466,7 +460,7 @@ class GraphMLWriter(GraphML):
             raise nx.NetworkXError(msg % element_type)
         keyid = self.get_key(name, self.xml_type[element_type], scope, default)
         data_element = self.myElement("data", key=keyid)
-        data_element.text = make_str(value)
+        data_element.text = str(value)
         return data_element
 
     def add_attributes(self, scope, xml_obj, data, default):
@@ -474,29 +468,29 @@ class GraphMLWriter(GraphML):
         to be added later. See add_graph_element.
         """
         for k, v in data.items():
-            self.attribute_types[(make_str(k), scope)].add(type(v))
+            self.attribute_types[(str(k), scope)].add(type(v))
             self.attributes[xml_obj].append([k, v, scope, default.get(k)])
 
     def add_nodes(self, G, graph_element):
         default = G.graph.get('node_default', {})
         for node, data in G.nodes(data=True):
-            node_element = self.myElement("node", id=make_str(node))
+            node_element = self.myElement("node", id=str(node))
             self.add_attributes("node", node_element, data, default)
             graph_element.append(node_element)
 
     def add_edges(self, G, graph_element):
         if G.is_multigraph():
             for u, v, key, data in G.edges(data=True, keys=True):
-                edge_element = self.myElement("edge", source=make_str(u),
-                                              target=make_str(v),
-                                              id=make_str(key))
+                edge_element = self.myElement("edge", source=str(u),
+                                              target=str(v),
+                                              id=str(key))
                 default = G.graph.get('edge_default', {})
                 self.add_attributes("edge", edge_element, data, default)
                 graph_element.append(edge_element)
         else:
             for u, v, data in G.edges(data=True):
-                edge_element = self.myElement("edge", source=make_str(u),
-                                              target=make_str(v))
+                edge_element = self.myElement("edge", source=str(u),
+                                              target=str(v))
                 default = G.graph.get('edge_default', {})
                 self.add_attributes("edge", edge_element, data, default)
                 graph_element.append(edge_element)
@@ -531,9 +525,9 @@ class GraphMLWriter(GraphML):
         # See self.attr_type
         for (xml_obj, data) in self.attributes.items():
             for (k, v, scope, default) in data:
-                xml_obj.append(self.add_data(make_str(k),
+                xml_obj.append(self.add_data(str(k),
                                              self.attr_type(k, scope, v),
-                                             make_str(v), scope, default))
+                                             str(v), scope, default))
         self.xml.append(graph_element)
 
     def add_graphs(self, graph_list):
@@ -639,35 +633,35 @@ class GraphMLWriterLxml(GraphMLWriter):
         edge_default = G.graph.get('edge_default', {})
         # Graph attributes
         for k, v in graphdata.items():
-            self.attribute_types[(make_str(k), "graph")].add(type(v))
+            self.attribute_types[(str(k), "graph")].add(type(v))
         for k, v in graphdata.items():
             element_type = self.xml_type[self.attr_type(k, "graph", v)]
-            self.get_key(make_str(k), element_type, "graph", None)
+            self.get_key(str(k), element_type, "graph", None)
         # Nodes and data
         for node, d in G.nodes(data=True):
             for k, v in d.items():
-                self.attribute_types[(make_str(k), "node")].add(type(v))
+                self.attribute_types[(str(k), "node")].add(type(v))
         for node, d in G.nodes(data=True):
             for k, v in d.items():
                 T = self.xml_type[self.attr_type(k, "node", v)]
-                self.get_key(make_str(k), T, "node", node_default.get(k))
+                self.get_key(str(k), T, "node", node_default.get(k))
         # Edges and data
         if G.is_multigraph():
             for u, v, ekey, d in G.edges(keys=True, data=True):
                 for k, v in d.items():
-                    self.attribute_types[(make_str(k), "edge")].add(type(v))
+                    self.attribute_types[(str(k), "edge")].add(type(v))
             for u, v, ekey, d in G.edges(keys=True, data=True):
                 for k, v in d.items():
                     T = self.xml_type[self.attr_type(k, "edge", v)]
-                    self.get_key(make_str(k), T, "edge", edge_default.get(k))
+                    self.get_key(str(k), T, "edge", edge_default.get(k))
         else:
             for u, v, d in G.edges(data=True):
                 for k, v in d.items():
-                    self.attribute_types[(make_str(k), "edge")].add(type(v))
+                    self.attribute_types[(str(k), "edge")].add(type(v))
             for u, v, d in G.edges(data=True):
                 for k, v in d.items():
                     T = self.xml_type[self.attr_type(k, "edge", v)]
-                    self.get_key(make_str(k), T, "edge", edge_default.get(k))
+                    self.get_key(str(k), T, "edge", edge_default.get(k))
 
         # Now add attribute keys to the xml file
         for key in self.xml:
@@ -683,9 +677,9 @@ class GraphMLWriterLxml(GraphMLWriter):
     def add_attributes(self, scope, xml_obj, data, default):
         """Appends attribute data."""
         for k, v in data.items():
-            data_element = self.add_data(make_str(k),
-                                         self.attr_type(make_str(k), scope, v),
-                                         make_str(v), scope, default.get(k))
+            data_element = self.add_data(str(k),
+                                         self.attr_type(str(k), scope, v),
+                                         str(v), scope, default.get(k))
             xml_obj.append(data_element)
 
     def __str__(self):
@@ -707,11 +701,6 @@ class GraphMLReader(GraphML):
     """Read a GraphML document.  Produces NetworkX graph objects."""
 
     def __init__(self, node_type=str, edge_key_type=int):
-        try:
-            import xml.etree.ElementTree
-        except ImportError:
-            msg = 'GraphML reader requires xml.elementtree.ElementTree'
-            raise ImportError(msg)
         self.node_type = node_type
         self.edge_key_type = edge_key_type
         self.multigraph = False  # assume multigraph and test for multiedges
@@ -901,21 +890,3 @@ class GraphMLReader(GraphML):
             if default is not None:
                 graphml_key_defaults[attr_id] = default.text
         return graphml_keys, graphml_key_defaults
-
-
-# fixture for nose tests
-def setup_module(module):
-    from nose import SkipTest
-    try:
-        import xml.etree.ElementTree
-    except:
-        raise SkipTest("xml.etree.ElementTree not available")
-
-
-# fixture for nose tests
-def teardown_module(module):
-    import os
-    try:
-        os.unlink('test.graphml')
-    except:
-        pass

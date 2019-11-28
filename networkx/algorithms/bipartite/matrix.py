@@ -167,13 +167,3 @@ def from_biadjacency_matrix(A, create_using=None, edge_attribute='weight'):
         triples = chain(((u, v, 1) for d in range(w)) for (u, v, w) in triples)
     G.add_weighted_edges_from(triples, weight=edge_attribute)
     return G
-
-# fixture for nose tests
-
-
-def setup_module(module):
-    from nose import SkipTest
-    try:
-        import scipy
-    except:
-        raise SkipTest("SciPy not available")

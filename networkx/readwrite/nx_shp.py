@@ -76,7 +76,7 @@ def read_shp(path, simplify=True, geom_attrs=True, strict=True):
 
     Examples
     --------
-    >>> G=nx.read_shp('test.shp') # doctest: +SKIP
+    >>> G = nx.read_shp('test.shp') # doctest: +SKIP
 
     References
     ----------
@@ -275,7 +275,6 @@ def write_shp(G, outdir):
         newfield = ogr.FieldDefn(key, fields[key])
         layer.CreateField(newfield)
 
-
     drv = ogr.GetDriverByName("ESRI Shapefile")
     shpdir = drv.CreateDataSource(outdir)
     # delete pre-existing output first otherwise ogr chokes
@@ -323,12 +322,3 @@ def write_shp(G, outdir):
         create_feature(g, edges, attributes)
 
     nodes, edges = None, None
-
-
-# fixture for nose tests
-def setup_module(module):
-    from nose import SkipTest
-    try:
-        import ogr
-    except:
-        raise SkipTest("OGR not available")

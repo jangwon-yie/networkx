@@ -41,7 +41,7 @@ __all__ = ['generate_edgelist',
            'read_weighted_edgelist',
            'write_weighted_edgelist']
 
-from networkx.utils import open_file, make_str
+from networkx.utils import open_file
 import networkx as nx
 
 
@@ -113,11 +113,11 @@ def generate_edgelist(G, delimiter=' ', data=True):
     if data is True:
         for u, v, d in G.edges(data=True):
             e = u, v, dict(d)
-            yield delimiter.join(map(make_str, e))
+            yield delimiter.join(map(str, e))
     elif data is False:
         for u, v in G.edges(data=False):
             e = u, v
-            yield delimiter.join(map(make_str, e))
+            yield delimiter.join(map(str, e))
     else:
         for u, v, d in G.edges(data=True):
             e = [u, v]
@@ -125,7 +125,7 @@ def generate_edgelist(G, delimiter=' ', data=True):
                 e.extend(d[k] for k in data)
             except KeyError:
                 pass  # missing data for this edge, should warn?
-            yield delimiter.join(map(make_str, e))
+            yield delimiter.join(map(str, e))
 
 
 @open_file(1, mode='wb')
@@ -445,7 +445,7 @@ def read_weighted_edgelist(path, comments="#", delimiter=None,
      a b 1
      a c 3.14159
      d e 42
-    
+
     See Also
     --------
     write_weighted_edgelist
@@ -458,12 +458,3 @@ def read_weighted_edgelist(path, comments="#", delimiter=None,
                          data=(('weight', float),),
                          encoding=encoding
                          )
-
-
-# fixture for nose tests
-def teardown_module(module):
-    import os
-    for fname in ['test.edgelist', 'test.edgelist.gz',
-                  'test.weighted.edgelist']:
-        if os.path.isfile(fname):
-            os.unlink(fname)

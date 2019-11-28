@@ -164,13 +164,3 @@ def bethe_hessian_spectrum(G, r=None):
     """
     from scipy.linalg import eigvalsh
     return eigvalsh(nx.bethe_hessian_matrix(G, r).todense())
-
-# fixture for nose tests
-
-
-def setup_module(module):
-    from nose import SkipTest
-    try:
-        import scipy.linalg
-    except ImportError:
-        raise SkipTest("scipy.linalg not available")
